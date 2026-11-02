@@ -1,0 +1,22 @@
+# Render Blueprint: creates the PostgreSQL database and the Flask web service in one go.
+# Render dashboard -> New -> Blueprint -> pick this repo.
+databases:
+  - name: ns-db
+    plan: free
+    databaseName: neurosynth
+
+services:
+  - type: web
+    name: ns-nano-yuanchang          # becomes https://ns-nano-yuanchang.onrender.com (rename if taken)
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    healthCheckPath: /
+    envVars:
+      - key: DB_URL
+        fromDatabase:
+          name: ns-db
+          property: connectionString
+      - key: PYTHON_VERSION
+        value: 3.12.7

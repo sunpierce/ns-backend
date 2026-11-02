@@ -1,0 +1,6 @@
+# only needed on the machine that runs create_db.py (once)
+pandas>=2.0
+pyarrow>=14
+numpy
+SQLAlchemy>=2.0
+psycopg2-binary>=2.9.9
