@@ -44,8 +44,8 @@ def get_engine():
         url = os.getenv("DB_URL") or os.getenv("DATABASE_URL")
         if not url:
             raise RuntimeError("Missing DB_URL environment variable.")
-        if url.startswith("postgres://"):                      # old Heroku/Render style scheme
-            url = "postgresql://" + url[len("postgres://"):]
+        # Always use the psycopg2 driver: SQLAlchemy >= 2.1 would otherwise default to psycopg (v3).
+        url = re.sub(r"^postgres(ql)?(\+\w+)?://", "postgresql+psycopg2://", url)
         _engine = create_engine(url, pool_pre_ping=True, pool_size=5, max_overflow=2)
     return _engine
 
